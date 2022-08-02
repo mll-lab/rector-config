@@ -16,14 +16,14 @@ In your `rector.php`:
 
 ```diff
 +use function MLL\RectorConfig\config;
- use Rector\Config\RectorConfig;
+use Rector\Config\RectorConfig;
 
- return static function (RectorConfig $rectorConfig): void {
-+    config($rectorConfig);
+return static function (RectorConfig $rectorConfig): void {
++   config($rectorConfig);
 
-     $rectorConfig->paths([
-         ...
-     ]);
-     $rectorConfig->rule(...);
- };
+    $rectorConfig->paths([
+        ...
+    ]);
+    $rectorConfig->rule(...);
+};
 ```
