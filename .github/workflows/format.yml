@@ -1,0 +1,67 @@
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+name: "Format"
+
+jobs:
+  composer-normalize:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+
+      - run: composer install --no-interaction --no-progress
+
+      - run: composer normalize
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Normalize composer.json
+
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+
+      - run: composer install --no-interaction --no-progress
+
+      - run: vendor/bin/php-cs-fixer fix
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply php-cs-fixer fixes
+
+  rector:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+
+      - run: composer install --no-interaction --no-progress
+
+      - run: vendor/bin/rector process
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply rector refactorings
