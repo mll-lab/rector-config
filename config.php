@@ -3,6 +3,7 @@
 namespace MLL\RectorConfig;
 
 use Rector\Config\RectorConfig;
+use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Privatization\Rector\Class_\FinalizeClassesWithoutChildrenRector;
 
 /**
@@ -19,4 +20,6 @@ function config(RectorConfig $rectorConfig): void
      * @noRector \Rector\Privatization\Rector\Class_\FinalizeClassesWithoutChildrenRector <has children|mocked>
      */
     $rectorConfig->rule(FinalizeClassesWithoutChildrenRector::class);
+
+    $rectorConfig->rule(FirstClassCallableRector::class);
 }
