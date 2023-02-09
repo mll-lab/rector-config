@@ -15,9 +15,13 @@ function config(RectorConfig $rectorConfig): void
      * Sometimes fails to recognize children, see https://github.com/rectorphp/rector/blob/main/docs/static_reflection_and_autoload.md#troubleshooting,
      * and never recognizes when a class is mocked (which final classes do not allow for).
      *
-     * To ignore this rule, add a comment like this to the PHPDoc of the offending class:
+     * To ignore this rule, use the following:
      *
-     * @noRector \Rector\Privatization\Rector\Class_\FinalizeClassesWithoutChildrenRector <has children|mocked>
+     * $rectorConfig->skip([
+     *   FinalizeClassesWithoutChildrenRector::class => [
+     *     __DIR__ . '/app/MyMockedService::class,
+     *   ],
+     * ]);
      */
     $rectorConfig->rule(FinalizeClassesWithoutChildrenRector::class);
 
