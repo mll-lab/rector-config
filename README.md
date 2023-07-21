@@ -27,3 +27,5 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(...);
 };
 ```
+
+If the project is using Laravel, use `laravel` instead of `config`.

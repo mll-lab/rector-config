@@ -9,6 +9,12 @@ You can find and compare releases at the [GitHub release page](https://github.co
 
 ## Unreleased
 
+## v2.1.0
+
+### Added
+
+- Add Laravel rule to convert `collect()` to `new Illuminate\Support\Collection()`
+
 ## v2.0.1
 
 ### Fixed
