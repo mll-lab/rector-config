@@ -1,0 +1,40 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+name: "Validate"
+
+jobs:
+  composer-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          extensions: mbstring
+          php-version: 8.1
+
+      - run: composer validate --strict
+
+  static-code-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          extensions: mbstring
+          php-version: 8.1
+
+      - run: composer install --no-interaction --no-progress --no-suggest
+
+      - run: vendor/bin/phpstan analyse

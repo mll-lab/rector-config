@@ -12,4 +12,5 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__ . '/config.php',
         __DIR__ . '/rector.php',
     ]);
+    $rectorConfig->phpstanConfig(__DIR__ . '/phpstan.neon');
 };
