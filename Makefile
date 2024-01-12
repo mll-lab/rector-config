@@ -1,5 +1,5 @@
 .PHONY: it
-it: fix normalize ## Perform quality checks
+it: fix normalize stan ## Perform quality checks
 
 .PHONY: help
 help: ## Displays this list of targets with descriptions
@@ -16,6 +16,10 @@ fix: ## Fix PHP code
 .PHONY: normalize
 normalize: ## Normalize composer.json
 	composer normalize
+
+.PHONY: stan
+stan: vendor ## Runs a static analysis with phpstan
+	vendor/bin/phpstan analyse
 
 vendor: composer.json ## Install dependencies through composer
 	composer install
