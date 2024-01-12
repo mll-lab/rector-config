@@ -9,6 +9,12 @@ You can find and compare releases at the [GitHub release page](https://github.co
 
 ## Unreleased
 
+## v2.2.0
+
+### Added
+
+- Allow rector `0.15 - 0.19`
+
 ## v2.1.0
 
 ### Added
