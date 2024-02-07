@@ -9,6 +9,10 @@ You can find and compare releases at the [GitHub release page](https://github.co
 
 ## Unreleased
 
+## v2.3.0
+
+- Remove `FinalizeClassesWithoutChildrenRector`
+
 ## v2.2.0
 
 ### Added
