@@ -15,7 +15,7 @@
   ],
   "require": {
     "php": "^8.1",
-    "rector/rector": "0.15 - 0.19"
+    "rector/rector": "0.15 - 1"
   },
   "require-dev": {
     "ergebnis/composer-normalize": "^2.13",
