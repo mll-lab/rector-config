@@ -26,6 +26,18 @@ jobs:
   static-code-analysis:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - "8.1"
+          - "8.2"
+          - "8.3"
+          - "8.4"
+        dependencies:
+          - lowest
+          - highest
+
     steps:
       - uses: actions/checkout@master
 
@@ -33,8 +45,12 @@ jobs:
         with:
           coverage: none
           extensions: mbstring
-          php-version: 8.1
+          php-version: "${{ matrix.php-version }}"
 
-      - run: composer install --no-interaction --no-progress --no-suggest
+      - if: matrix.dependencies == 'lowest'
+        run: composer update --prefer-lowest --no-interaction --no-progress --no-suggest
+
+      - if: matrix.dependencies == 'highest'
+        run: composer update --no-interaction --no-progress --no-suggest
 
       - run: vendor/bin/phpstan analyse
