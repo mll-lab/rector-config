@@ -8,7 +8,9 @@ Shared configuration for rector
 
 ## Installation
 
-    composer require --dev mll-lab/rector-config
+```shell
+composer require --dev mll-lab/rector-config
+```
 
 ## Usage
 
