@@ -2,12 +2,11 @@
 
 namespace MLL\RectorConfig;
 
-use PHPStan\Type\ObjectType;
 use Rector\Config\RectorConfig;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Transform\Rector\FuncCall\FuncCallToNewRector;
-use Rector\Transform\Rector\MethodCall\MethodCallToNewRector;
-use Rector\Transform\ValueObject\MethodCallToNew;
+use Rector\Transform\Rector\StaticCall\StaticCallToNewRector;
+use Rector\Transform\ValueObject\StaticCallToNew;
 
 /** Configure rector with PHP rules. */
 function config(RectorConfig $rectorConfig): void
@@ -20,13 +19,12 @@ function laravel(RectorConfig $rectorConfig): void
 {
     config($rectorConfig);
     $rectorConfig->ruleWithConfiguration(FuncCallToNewRector::class, [
-        'collect' => 'Illuminate\\Support\\Collection',
+        'collect' => \Illuminate\Support\Collection::class,
     ]);
-    $rectorConfig->ruleWithConfiguration(MethodCallToNewRector::class, [
-        new MethodCallToNew(
-            objectType: new ObjectType('Illuminate\\Support\\Collection'),
-            methodName: 'make',
-            newClassString: 'Illuminate\\Support\\Collection',
+    $rectorConfig->ruleWithConfiguration(StaticCallToNewRector::class, [
+        new StaticCallToNew(
+            class: \Illuminate\Support\Collection::class,
+            method: 'make',
         ),
     ]);
 }
