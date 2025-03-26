@@ -9,6 +9,12 @@ You can find and compare releases at the [GitHub release page](https://github.co
 
 ## Unreleased
 
+## v2.6.0
+
+### Added
+
+- Convert `Collection::make()` to `new Collection()`
+
 ## v2.5.0
 
 ### Added
