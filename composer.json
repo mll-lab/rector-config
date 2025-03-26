@@ -19,7 +19,7 @@
   },
   "require-dev": {
     "ergebnis/composer-normalize": "^2.13",
-    "laravel/framework": "^12",
+    "laravel/framework": "^11 || ^12",
     "mll-lab/php-cs-fixer-config": "^5",
     "phpstan/extension-installer": "^1",
     "phpstan/phpstan": "^1.12 || ^2.1"
