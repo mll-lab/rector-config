@@ -17,9 +17,9 @@ jobs:
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
+          php-version: 8.3
 
-      - run: composer install --no-interaction --no-progress
+      - uses: ramsey/composer-install@v3
 
       - run: composer normalize
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -36,9 +36,9 @@ jobs:
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
+          php-version: 8.3
 
-      - run: composer install --no-interaction --no-progress
+      - uses: ramsey/composer-install@v3
 
       - run: vendor/bin/php-cs-fixer fix
 
@@ -56,9 +56,9 @@ jobs:
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
+          php-version: 8.3
 
-      - run: composer install --no-interaction --no-progress
+      - uses: ramsey/composer-install@v3
 
       - run: vendor/bin/rector process
 

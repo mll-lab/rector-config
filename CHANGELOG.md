@@ -9,6 +9,17 @@ You can find and compare releases at the [GitHub release page](https://github.co
 
 ## Unreleased
 
+## v3.0.0
+
+### Added
+
+- Convert `Collection::make()` to `new Collection()`
+
+### Changed
+
+- Require `rector/rector` versions `^1.2.7 || ^2.0.10`
+- Require PHP 8.3
+
 ## v2.5.0
 
 ### Added

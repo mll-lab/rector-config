@@ -14,11 +14,12 @@
     }
   ],
   "require": {
-    "php": "^8.1",
-    "rector/rector": "0.15 - 2"
+    "php": "^8.3",
+    "rector/rector": "^1.2.7 || ^2.0.10"
   },
   "require-dev": {
     "ergebnis/composer-normalize": "^2.13",
+    "laravel/framework": "^11 || ^12",
     "mll-lab/php-cs-fixer-config": "^5",
     "phpstan/extension-installer": "^1",
     "phpstan/phpstan": "^1.12 || ^2.1"
