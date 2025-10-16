@@ -9,6 +9,12 @@ You can find and compare releases at the [GitHub release page](https://github.co
 
 ## Unreleased
 
+## v3.1.1
+
+### Removed
+
+- Remove enforcing usage of `\Illuminate\Support\Str` over `\Str` in favor of https://github.com/driftingly/rector-laravel/blob/main/config/sets/laravel-facade-aliases-to-full-names.php
+
 ## v3.1.0
 
 ### Added

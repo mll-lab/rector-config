@@ -23,7 +23,4 @@ function laravel(RectorConfig $rectorConfig): void
             method: 'make',
         ),
     ]);
-    $rectorConfig->ruleWithConfiguration(\Rector\Renaming\Rector\Name\RenameClassRector::class, [
-        \Str::class => \Illuminate\Support\Str::class,
-    ]);
 }
