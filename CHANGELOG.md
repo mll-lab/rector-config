@@ -9,6 +9,12 @@ You can find and compare releases at the [GitHub release page](https://github.co
 
 ## Unreleased
 
+## v3.1.0
+
+### Added
+
+- Enforce usage of `\Illuminate\Support\Str` over `\Str`
+
 ## v3.0.0
 
 ### Added
