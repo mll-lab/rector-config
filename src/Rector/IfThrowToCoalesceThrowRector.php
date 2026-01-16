@@ -6,8 +6,10 @@ use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\BinaryOp\Coalesce;
+use PhpParser\Node\Expr\BinaryOp\Equal;
 use PhpParser\Node\Expr\BinaryOp\Identical;
 use PhpParser\Node\Expr\BooleanNot;
+use PhpParser\Node\Expr\Ternary;
 use PhpParser\Node\Expr\Throw_ as ExprThrow;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -81,12 +83,12 @@ CODE_SAMPLE,
                 continue;
             }
 
-            if (! $stmt->expr instanceof Assign) {
+            $expr = $stmt->expr;
+            if (! $expr instanceof Assign) {
                 continue;
             }
 
-            $assign = $stmt->expr;
-            if (! $assign->var instanceof Variable) {
+            if (! $expr->var instanceof Variable) {
                 continue;
             }
 
@@ -109,7 +111,9 @@ CODE_SAMPLE,
             $throwExpr = null;
             if ($ifStmt instanceof StmtThrow) {
                 $throwExpr = new ExprThrow($ifStmt->expr);
-            } elseif ($ifStmt instanceof Expression && $ifStmt->expr instanceof ExprThrow) {
+            } elseif ($ifStmt instanceof Expression
+                && $ifStmt->expr instanceof ExprThrow
+            ) {
                 $throwExpr = $ifStmt->expr;
             }
 
@@ -117,17 +121,19 @@ CODE_SAMPLE,
                 continue;
             }
 
-            $result = $this->matchCoalescePattern($assign, $nextStmt, $throwExpr);
+            $result = $this->matchCoalescePattern($expr, $nextStmt, $throwExpr);
             if ($result === null) {
                 continue;
             }
 
-            $assign->expr = $result;
+            $expr->expr = $result;
             unset($node->stmts[$key + 1]);
             $hasChanged = true;
         }
 
-        return $hasChanged ? $node : null;
+        return $hasChanged
+            ? $node
+            : null;
     }
 
     public function provideMinPhpVersion(): int
@@ -141,31 +147,38 @@ CODE_SAMPLE,
         $variable = $assign->var;
         $condition = $if->cond;
 
-        // Pattern 1: if ($var === null) - null coalesce
-        if ($condition instanceof Identical && $this->isNullIdentical($condition, $variable)) {
+        // Pattern 1: if ($var === null) or if ($var == null) - null coalesce
+        if (($condition instanceof Identical || $condition instanceof Equal)
+            && $this->isNullComparison($condition, $variable)
+        ) {
             return new Coalesce($assign->expr, $throw);
         }
 
         // Pattern 2: if (! $var) - elvis operator
         if ($condition instanceof BooleanNot
-            && $this->nodeComparator->areNodesEqual($condition->expr, $variable)) {
-            return new Expr\Ternary($assign->expr, null, $throw);
+            && $this->nodeComparator->areNodesEqual($condition->expr, $variable)
+        ) {
+            return new Ternary($assign->expr, null, $throw);
         }
 
         return null;
     }
 
-    /** Check if condition is `$var === null` or `null === $var` (Yoda style). */
-    private function isNullIdentical(Identical $identical, Variable $variable): bool
+    /** Check if condition is `$var === null`, `$var == null`, or Yoda style equivalents. */
+    private function isNullComparison(Identical|Equal $comparison, Variable $variable): bool
     {
-        // $var === null
-        if ($this->nodeComparator->areNodesEqual($identical->left, $variable)
-            && $this->valueResolver->isNull($identical->right)) {
+        $left = $comparison->left;
+        $right = $comparison->right;
+
+        // $var === null or $var == null
+        if ($this->nodeComparator->areNodesEqual($left, $variable)
+            && $this->valueResolver->isNull($right)
+        ) {
             return true;
         }
 
-        // null === $var (Yoda style)
-        return $this->valueResolver->isNull($identical->left)
-            && $this->nodeComparator->areNodesEqual($identical->right, $variable);
+        // null === $var or null == $var (Yoda style)
+        return $this->valueResolver->isNull($left)
+            && $this->nodeComparator->areNodesEqual($right, $variable);
     }
 }
