@@ -7,7 +7,12 @@ use Rector\Config\RectorConfig;
 /** Configure rector with PHP rules. */
 function config(RectorConfig $rectorConfig): void
 {
-    $rectorConfig->rule(\Rector\Php81\Rector\Array_\FirstClassCallableRector::class);
+    // Use ArrayToFirstClassCallableRector in Rector 2.x, FirstClassCallableRector in 1.x
+    /** @var class-string<\Rector\Contract\Rector\RectorInterface> $firstClassCallableRector */
+    $firstClassCallableRector = class_exists(\Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector::class)
+        ? \Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector::class
+        : \Rector\Php81\Rector\Array_\FirstClassCallableRector::class;
+    $rectorConfig->rule($firstClassCallableRector);
     $rectorConfig->rule(\MLL\RectorConfig\Rector\IfThrowToCoalesceThrowRector::class);
 }
 
