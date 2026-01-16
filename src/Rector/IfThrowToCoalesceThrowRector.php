@@ -8,12 +8,13 @@ use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\BinaryOp\Coalesce;
 use PhpParser\Node\Expr\BinaryOp\Identical;
 use PhpParser\Node\Expr\BooleanNot;
-use PhpParser\Node\Expr\Throw_;
+use PhpParser\Node\Expr\Throw_ as ExprThrow;
 use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Expression;
+use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\If_;
-use Rector\Contract\PhpParser\Node\StmtsAwareInterface;
-use Rector\PhpParser\Enum\NodeGroup;
+use PhpParser\Node\Stmt\Throw_ as StmtThrow;
 use Rector\PhpParser\Node\Value\ValueResolver;
 use Rector\Rector\AbstractRector;
 use Rector\ValueObject\PhpVersion;
@@ -63,10 +64,10 @@ CODE_SAMPLE,
     /** @return array<class-string<Node>> */
     public function getNodeTypes(): array
     {
-        return NodeGroup::STMTS_AWARE;
+        return [ClassMethod::class, Function_::class];
     }
 
-    /** @param StmtsAwareInterface $node */
+    /** @param ClassMethod|Function_ $node */
     public function refactor(Node $node): ?Node
     {
         if ($node->stmts === null) {
@@ -103,15 +104,19 @@ CODE_SAMPLE,
             }
 
             $ifStmt = $nextStmt->stmts[0];
-            if (! $ifStmt instanceof Expression) {
+
+            // Handle both Stmt\Throw_ (traditional) and Expression containing Expr\Throw_ (PHP 8.0+)
+            $throwExpr = null;
+            if ($ifStmt instanceof StmtThrow) {
+                $throwExpr = new ExprThrow($ifStmt->expr);
+            } elseif ($ifStmt instanceof Expression && $ifStmt->expr instanceof ExprThrow) {
+                $throwExpr = $ifStmt->expr;
+            }
+
+            if ($throwExpr === null) {
                 continue;
             }
 
-            if (! $ifStmt->expr instanceof Throw_) {
-                continue;
-            }
-
-            $throwExpr = $ifStmt->expr;
             $result = $this->matchCoalescePattern($assign, $nextStmt, $throwExpr);
             if ($result === null) {
                 continue;
@@ -131,7 +136,7 @@ CODE_SAMPLE,
     }
 
     /** Match if the pattern is a null coalesce or elvis coalesce. */
-    private function matchCoalescePattern(Assign $assign, If_ $if, Throw_ $throw): ?Expr
+    private function matchCoalescePattern(Assign $assign, If_ $if, ExprThrow $throw): ?Expr
     {
         $variable = $assign->var;
         $condition = $if->cond;
