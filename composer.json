@@ -22,12 +22,21 @@
     "laravel/framework": "^11 || ^12",
     "mll-lab/php-cs-fixer-config": "^5",
     "phpstan/extension-installer": "^1",
-    "phpstan/phpstan": "^1.12 || ^2.1"
+    "phpstan/phpstan": "^1.12 || ^2.1",
+    "phpunit/phpunit": "^11"
   },
   "autoload": {
+    "psr-4": {
+      "MLL\\RectorConfig\\": "src/"
+    },
     "files": [
       "config.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "MLL\\RectorConfig\\Tests\\": "tests/"
+    }
   },
   "config": {
     "allow-plugins": {
