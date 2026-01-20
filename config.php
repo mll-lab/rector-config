@@ -13,6 +13,8 @@ function config(RectorConfig $rectorConfig): void
         ? \Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector::class
         : \Rector\Php81\Rector\Array_\FirstClassCallableRector::class;
     $rectorConfig->rule($firstClassCallableRector);
+
+    $rectorConfig->rule(\MLL\RectorConfig\Rector\ElvisToCoalesceRector::class);
     $rectorConfig->rule(\MLL\RectorConfig\Rector\IfThrowToCoalesceThrowRector::class);
 }
 
