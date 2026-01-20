@@ -21,5 +21,9 @@ normalize: ## Normalize composer.json
 stan: vendor ## Runs a static analysis with phpstan
 	vendor/bin/phpstan analyse --configuration=phpstan.neon
 
+.PHONY: test
+test: vendor ## Run tests
+	vendor/bin/phpunit
+
 vendor: composer.json ## Install dependencies through composer
 	composer update
