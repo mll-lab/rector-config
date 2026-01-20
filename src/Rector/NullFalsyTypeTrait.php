@@ -11,23 +11,23 @@ trait NullFalsyTypeTrait
     /** Check if an expression's type can only be falsy via null (e.g., object|null). */
     private function isOnlyNullFalsy(Expr $expr): bool
     {
-        $nativeType = $this->nodeTypeResolver->getNativeType($expr);
+        $type = $this->nodeTypeResolver->getType($expr);
 
-        if (! TypeCombinator::containsNull($nativeType)) {
+        if (! TypeCombinator::containsNull($type)) {
             return false;
         }
 
-        if (! $nativeType instanceof UnionType) {
+        if (! $type instanceof UnionType) {
             return false;
         }
 
-        foreach ($nativeType->getTypes() as $subType) {
+        foreach ($type->getTypes() as $subType) {
             if ($subType->isArray()->yes()) {
                 return false;
             }
         }
 
-        $typeWithoutNull = TypeCombinator::removeNull($nativeType);
+        $typeWithoutNull = TypeCombinator::removeNull($type);
 
         return ! $typeWithoutNull->isScalar()->yes();
     }
