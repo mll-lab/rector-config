@@ -9,6 +9,21 @@ You can find and compare releases at the [GitHub release page](https://github.co
 
 ## Unreleased
 
+## v3.2.0
+
+### Added
+
+- Add `IfThrowToCoalesceThrowRector` to transform null-check-then-throw patterns to use the null coalesce operator with throw expression https://github.com/mll-lab/rector-config/pull/6
+- Add `ElvisToCoalesceRector` to convert elvis operator (`?:`) to null coalesce (`??`) when the expression can only be falsy via null https://github.com/mll-lab/rector-config/pull/6
+
+### Changed
+
+- Select `FirstClassCallableRector` or `ArrayToFirstClassCallableRector` based on Rector version https://github.com/mll-lab/rector-config/pull/6
+
+### Fixed
+
+- Rector 1.x compatibility for `IfThrowToCoalesceThrowRector` https://github.com/mll-lab/rector-config/pull/6
+
 ## v3.1.1
 
 ### Removed
