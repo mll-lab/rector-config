@@ -29,13 +29,15 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class IfThrowToCoalesceThrowRector extends AbstractRector implements MinPhpVersionInterface
 {
+    use NullFalsyTypeTrait;
+
     public function __construct(
         private readonly ValueResolver $valueResolver,
     ) {}
 
     public function getRuleDefinition(): RuleDefinition
     {
-        return new RuleDefinition('Transform if-null-throw patterns to coalesce throw expressions', [
+        return new RuleDefinition('Transform if-null/falsy-throw patterns to coalesce throw expressions', [
             new CodeSample(
                 <<<'CODE_SAMPLE'
 $result = $this->fetchNullable();
@@ -107,7 +109,6 @@ CODE_SAMPLE,
 
             $ifStmt = $nextStmt->stmts[0];
 
-            // Handle both Stmt\Throw_ (traditional) and Expression containing Expr\Throw_ (PHP 8.0+)
             $throwExpr = null;
             if ($ifStmt instanceof StmtThrow) {
                 $throwExpr = new ExprThrow($ifStmt->expr);
@@ -141,43 +142,41 @@ CODE_SAMPLE,
         return PhpVersion::PHP_80;
     }
 
-    /** Match if the pattern is a null coalesce or elvis coalesce. */
     private function matchCoalescePattern(Assign $assign, If_ $if, ExprThrow $throw): ?Expr
     {
         $variable = $assign->var;
         $condition = $if->cond;
 
-        // Pattern 1: if ($var === null) or if ($var == null) - null coalesce
         if (($condition instanceof Identical || $condition instanceof Equal)
             && $this->isNullComparison($condition, $variable)
         ) {
             return new Coalesce($assign->expr, $throw);
         }
 
-        // Pattern 2: if (! $var) - elvis operator
         if ($condition instanceof BooleanNot
             && $this->nodeComparator->areNodesEqual($condition->expr, $variable)
         ) {
+            if ($this->isOnlyNullFalsy($assign->expr)) {
+                return new Coalesce($assign->expr, $throw);
+            }
+
             return new Ternary($assign->expr, null, $throw);
         }
 
         return null;
     }
 
-    /** Check if condition is `$var === null`, `$var == null`, or Yoda style equivalents. */
     private function isNullComparison(Identical|Equal $comparison, Variable $variable): bool
     {
         $left = $comparison->left;
         $right = $comparison->right;
 
-        // $var === null or $var == null
         if ($this->nodeComparator->areNodesEqual($left, $variable)
             && $this->valueResolver->isNull($right)
         ) {
             return true;
         }
 
-        // null === $var or null == $var (Yoda style)
         return $this->valueResolver->isNull($left)
             && $this->nodeComparator->areNodesEqual($right, $variable);
     }
