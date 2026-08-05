@@ -72,7 +72,11 @@ CODE_SAMPLE,
 
     private function idAliasedPrimaryKey(string $className): ?string
     {
-        return $this->idAliasedPrimaryKeys[$className] ??= self::determineIdAliasedPrimaryKey($className);
+        if (! array_key_exists($className, $this->idAliasedPrimaryKeys)) {
+            $this->idAliasedPrimaryKeys[$className] = self::determineIdAliasedPrimaryKey($className);
+        }
+
+        return $this->idAliasedPrimaryKeys[$className];
     }
 
     private static function determineIdAliasedPrimaryKey(string $className): ?string
