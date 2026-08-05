@@ -53,6 +53,7 @@ CODE_SAMPLE,
 
         $propertyName = $node->name->toString();
         if ($propertyName === 'id') {
+            // Already the alias, skipped before paying for type inference below.
             return null;
         }
 
