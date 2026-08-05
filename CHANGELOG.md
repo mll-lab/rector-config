@@ -9,6 +9,10 @@ You can find and compare releases at the [GitHub release page](https://github.co
 
 ## Unreleased
 
+### Added
+
+- Add `PrimaryKeyColumnToIdAliasRector` to access model identity through the `id` alias instead of the primary key column name
+
 ## v3.2.0
 
 ### Added
