@@ -1,6 +1,7 @@
 <?php
 
 use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source\Examination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source\LegacyAccessorExamination;
 
 class RewritesPrimaryKeyColumn
 {
@@ -18,6 +19,11 @@ class RewritesPrimaryKeyColumn
     {
         return $examination?->exam_no;
     }
+
+    public function legacyAccessor(LegacyAccessorExamination $examination): ?string
+    {
+        return $examination->exam_no;
+    }
 }
 
 ?>
@@ -25,6 +31,7 @@ class RewritesPrimaryKeyColumn
 <?php
 
 use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source\Examination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source\LegacyAccessorExamination;
 
 class RewritesPrimaryKeyColumn
 {
@@ -41,6 +48,11 @@ class RewritesPrimaryKeyColumn
     public function nullsafe(?Examination $examination): ?string
     {
         return $examination?->id;
+    }
+
+    public function legacyAccessor(LegacyAccessorExamination $examination): ?string
+    {
+        return $examination->id;
     }
 }
 
