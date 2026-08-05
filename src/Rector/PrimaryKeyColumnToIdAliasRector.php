@@ -95,6 +95,9 @@ CODE_SAMPLE,
             // models may derive it dynamically, e.g. from a table prefix.
             $model = $reflection->newInstance();
         } catch (\Throwable) {
+            // Constructors may require infrastructure that is unavailable during analysis,
+            // such as a database connection or service container bindings.
+            // Without an instance, the primary key is unknowable, so the model is left alone.
             return null;
         }
 
