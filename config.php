@@ -4,7 +4,9 @@ namespace MLL\RectorConfig;
 
 use Rector\Config\RectorConfig;
 
-/** Configure rector with PHP rules. */
+/**
+ * Configure rector with PHP rules.
+ */
 function config(RectorConfig $rectorConfig): void
 {
     // Use ArrayToFirstClassCallableRector in Rector 2.x, FirstClassCallableRector in 1.x
@@ -20,7 +22,9 @@ function config(RectorConfig $rectorConfig): void
     $rectorConfig->rule(\MLL\RectorConfig\Rector\IfThrowToCoalesceThrowRector::class);
 }
 
-/** Configure rector with Laravel rules. */
+/**
+ * Configure rector with Laravel rules.
+ */
 function laravel(RectorConfig $rectorConfig): void
 {
     config($rectorConfig);
