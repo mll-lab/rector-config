@@ -1,7 +1,7 @@
 <?php
 
-use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source\Examination;
-use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source\LegacyAccessorExamination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\Examination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\LegacyAccessorExamination;
 
 class RewritesPrimaryKeyColumn
 {
@@ -30,8 +30,8 @@ class RewritesPrimaryKeyColumn
 -----
 <?php
 
-use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source\Examination;
-use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source\LegacyAccessorExamination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\Examination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\LegacyAccessorExamination;
 
 class RewritesPrimaryKeyColumn
 {

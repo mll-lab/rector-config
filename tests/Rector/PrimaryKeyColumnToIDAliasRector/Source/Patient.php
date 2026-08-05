@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source;
+namespace MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source;
 
 use Illuminate\Database\Eloquent\Model;
 

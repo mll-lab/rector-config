@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source;
+namespace MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
-class ReadOnlyIdExamination extends Model
+class ReadOnlyIDExamination extends Model
 {
     /** @var string */
     protected $primaryKey = 'exam_no';

@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector;
+namespace MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 
-final class PrimaryKeyColumnToIdAliasRectorTest extends AbstractRectorTestCase
+final class PrimaryKeyColumnToIDAliasRectorTest extends AbstractRectorTestCase
 {
     #[DataProvider('provideData')]
     public function test(string $filePath): void

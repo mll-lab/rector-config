@@ -13,9 +13,9 @@ use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 /**
- * @see \MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\PrimaryKeyColumnToIdAliasRectorTest
+ * @see \MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\PrimaryKeyColumnToIDAliasRectorTest
  */
-final class PrimaryKeyColumnToIdAliasRector extends AbstractRector
+final class PrimaryKeyColumnToIDAliasRector extends AbstractRector
 {
     /**
      * Primary key column names of models that alias them through a writable "id" accessor.
@@ -74,13 +74,13 @@ CODE_SAMPLE,
     private function idAliasedPrimaryKey(string $className): ?string
     {
         if (! array_key_exists($className, $this->idAliasedPrimaryKeys)) {
-            $this->idAliasedPrimaryKeys[$className] = self::determineIdAliasedPrimaryKey($className);
+            $this->idAliasedPrimaryKeys[$className] = self::determineIDAliasedPrimaryKey($className);
         }
 
         return $this->idAliasedPrimaryKeys[$className];
     }
 
-    private static function determineIdAliasedPrimaryKey(string $className): ?string
+    private static function determineIDAliasedPrimaryKey(string $className): ?string
     {
         if (! is_a($className, Model::class, true)) {
             return null;
@@ -108,13 +108,13 @@ CODE_SAMPLE,
         }
 
         // Rewriting is only safe if the alias can be written as well as read.
-        return self::hasWritableIdAccessor($reflection, $model)
+        return self::hasWritableIDAccessor($reflection, $model)
             ? $primaryKey
             : null;
     }
 
     /** @param \ReflectionClass<Model> $reflection */
-    private static function hasWritableIdAccessor(\ReflectionClass $reflection, Model $model): bool
+    private static function hasWritableIDAccessor(\ReflectionClass $reflection, Model $model): bool
     {
         if ($reflection->hasMethod('getIdAttribute')) {
             return $reflection->hasMethod('setIdAttribute');

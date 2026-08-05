@@ -1,9 +1,9 @@
 <?php
 
-use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source\Examination;
-use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source\Patient;
-use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source\ReadOnlyIdExamination;
-use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIdAliasRector\Source\ReadOnlyLegacyAccessorExamination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\Examination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\Patient;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\ReadOnlyIDExamination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\ReadOnlyLegacyAccessorExamination;
 
 class SkipsOtherPropertiesAndModels
 {
@@ -17,7 +17,7 @@ class SkipsOtherPropertiesAndModels
         return $patient->pat_no;
     }
 
-    public function readOnlyIdAccessor(ReadOnlyIdExamination $examination): ?string
+    public function readOnlyIdAccessor(ReadOnlyIDExamination $examination): ?string
     {
         return $examination->exam_no;
     }
