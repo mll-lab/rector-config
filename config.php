@@ -13,7 +13,9 @@ function config(RectorConfig $rectorConfig): void
     /** @var class-string<\Rector\Contract\Rector\RectorInterface> $firstClassCallableRector */
     $firstClassCallableRector = class_exists(\Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector::class)
         ? \Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector::class
-        : \Rector\Php81\Rector\Array_\FirstClassCallableRector::class;
+        // Referenced as a string because recent Rector 2.x releases removed the class,
+        // which makes static analysis fail to resolve it.
+        : 'Rector\Php81\Rector\Array_\FirstClassCallableRector';
     $rectorConfig->rule($firstClassCallableRector);
 
     $rectorConfig->rule(\MLL\RectorConfig\Rector\ElvisToCoalesceRector::class);
