@@ -2,6 +2,7 @@
 
 use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\Examination;
 use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\LegacyAccessorExamination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\PrefixedExamination;
 
 class RewritesPrimaryKeyColumn
 {
@@ -24,6 +25,11 @@ class RewritesPrimaryKeyColumn
     {
         return $examination->exam_no;
     }
+
+    public function primaryKeyDerivedDuringConstruction(PrefixedExamination $examination): ?string
+    {
+        return $examination->exam_no;
+    }
 }
 
 ?>
@@ -32,6 +38,7 @@ class RewritesPrimaryKeyColumn
 
 use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\Examination;
 use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\LegacyAccessorExamination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\PrefixedExamination;
 
 class RewritesPrimaryKeyColumn
 {
@@ -51,6 +58,11 @@ class RewritesPrimaryKeyColumn
     }
 
     public function legacyAccessor(LegacyAccessorExamination $examination): ?string
+    {
+        return $examination->id;
+    }
+
+    public function primaryKeyDerivedDuringConstruction(PrefixedExamination $examination): ?string
     {
         return $examination->id;
     }

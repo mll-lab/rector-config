@@ -8,6 +8,11 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\NullsafePropertyFetch;
 use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Identifier;
+use PHPStan\Reflection\ClassReflection;
+use PHPStan\Reflection\ReflectionProvider;
+use PHPStan\Type\Generic\GenericObjectType;
+use PHPStan\Type\NeverType;
+use PHPStan\Type\Type;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
@@ -23,6 +28,10 @@ final class PrimaryKeyColumnToIDAliasRector extends AbstractRector
      * @var array<class-string, string|null>
      */
     private array $idAliasedPrimaryKeys = [];
+
+    public function __construct(
+        private ReflectionProvider $reflectionProvider,
+    ) {}
 
     public function getRuleDefinition(): RuleDefinition
     {
@@ -74,27 +83,89 @@ CODE_SAMPLE,
     private function idAliasedPrimaryKey(string $className): ?string
     {
         if (! array_key_exists($className, $this->idAliasedPrimaryKeys)) {
-            $this->idAliasedPrimaryKeys[$className] = self::determineIDAliasedPrimaryKey($className);
+            $this->idAliasedPrimaryKeys[$className] = $this->determineIDAliasedPrimaryKey($className);
         }
 
         return $this->idAliasedPrimaryKeys[$className];
     }
 
-    private static function determineIDAliasedPrimaryKey(string $className): ?string
+    private function determineIDAliasedPrimaryKey(string $className): ?string
     {
-        if (! is_a($className, Model::class, true)) {
+        $classReflection = $this->reflectionProvider->getClass($className);
+        if (! $classReflection->isSubclassOf(Model::class)) {
             return null;
         }
 
-        $reflection = new \ReflectionClass($className);
-        if ($reflection->isAbstract()) {
+        if ($classReflection->isAbstract()) {
+            // Subclasses may declare another primary key,
+            // so the column behind the declared type is not pinned down.
             return null;
         }
 
+        // Rewriting is only safe if the alias can be written as well as read.
+        if (! self::hasWritableIDAccessor($classReflection)) {
+            return null;
+        }
+
+        // Models keyed by "id" need no rewriting, the caller already skipped that property name.
+        return self::primaryKeyColumn($classReflection);
+    }
+
+    /** @param ClassReflection $classReflection Describes a subclass of Model */
+    private static function hasWritableIDAccessor(ClassReflection $classReflection): bool
+    {
+        if ($classReflection->hasNativeMethod('getIdAttribute')) {
+            return $classReflection->hasNativeMethod('setIdAttribute');
+        }
+
+        if (! $classReflection->hasNativeMethod('id')) {
+            return false;
+        }
+
+        // Native methods always have exactly one variant, only PHP internals are overloaded.
+        $id = $classReflection->getNativeMethod('id')->getVariants()[0];
+        foreach ($id->getParameters() as $parameter) {
+            if (! $parameter->isOptional()) {
+                // Eloquent calls accessors without arguments, so this cannot be one.
+                return false;
+            }
+        }
+
+        return self::isReadableAndWritableAttribute($id->getReturnType());
+    }
+
+    private static function isReadableAndWritableAttribute(Type $returnType): bool
+    {
+        if (! $returnType instanceof GenericObjectType) {
+            // Without the type parameters of the "@return Attribute<TGet, TSet>" annotation,
+            // read-only accessors are indistinguishable from writable ones.
+            return false;
+        }
+
+        if ($returnType->getClassName() !== Attribute::class) {
+            return false;
+        }
+
+        // Attribute<TGet, TSet>, where Attribute::get() leaves TSet
+        // and Attribute::set() leaves TGet as never.
+        [$get, $set] = $returnType->getTypes() + [null, null];
+
+        return $get instanceof Type
+            && ! $get instanceof NeverType
+            && $set instanceof Type
+            && ! $set instanceof NeverType;
+    }
+
+    /**
+     * Models may derive their primary key during construction, e.g. from a table prefix,
+     * so it is only knowable from an instance. This constructor call is the sole part of
+     * the analyzed code that this rule runs, mirroring larastan, which also instantiates
+     * models to reflect on their keys and columns.
+     */
+    private static function primaryKeyColumn(ClassReflection $classReflection): ?string
+    {
         try {
-            // The primary key column is only known after construction,
-            // models may derive it dynamically, e.g. from a table prefix.
-            $model = $reflection->newInstance();
+            $model = $classReflection->getNativeReflection()->newInstance();
         } catch (\Throwable) {
             // Constructors may require infrastructure that is unavailable during analysis,
             // such as a database connection or service container bindings.
@@ -102,37 +173,6 @@ CODE_SAMPLE,
             return null;
         }
 
-        $primaryKey = $model->getKeyName();
-        if ($primaryKey === 'id') {
-            return null;
-        }
-
-        // Rewriting is only safe if the alias can be written as well as read.
-        return self::hasWritableIDAccessor($reflection, $model)
-            ? $primaryKey
-            : null;
-    }
-
-    /** @param \ReflectionClass<Model> $reflection */
-    private static function hasWritableIDAccessor(\ReflectionClass $reflection, Model $model): bool
-    {
-        if ($reflection->hasMethod('getIdAttribute')) {
-            return $reflection->hasMethod('setIdAttribute');
-        }
-
-        if (! $reflection->hasMethod('id')) {
-            return false;
-        }
-
-        $id = $reflection->getMethod('id');
-        if ($id->getNumberOfRequiredParameters() > 0) {
-            return false;
-        }
-
-        $attribute = $id->invoke($model);
-
-        return $attribute instanceof Attribute
-            && $attribute->get !== null
-            && $attribute->set !== null;
+        return $model->getKeyName();
     }
 }
