@@ -1,6 +1,7 @@
 <?php
 
 use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\Examination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\ExaminationHolder;
 use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\LegacyAccessorExamination;
 use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\PrefixedExamination;
 
@@ -21,6 +22,11 @@ class RewritesPrimaryKeyColumn
         return $examination?->exam_no;
     }
 
+    public function nullsafeOnNullableProperty(ExaminationHolder $holder): ?string
+    {
+        return $holder->examination?->exam_no;
+    }
+
     public function legacyAccessor(LegacyAccessorExamination $examination): ?string
     {
         return $examination->exam_no;
@@ -37,6 +43,7 @@ class RewritesPrimaryKeyColumn
 <?php
 
 use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\Examination;
+use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\ExaminationHolder;
 use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\LegacyAccessorExamination;
 use MLL\RectorConfig\Tests\Rector\PrimaryKeyColumnToIDAliasRector\Source\PrefixedExamination;
 
@@ -55,6 +62,11 @@ class RewritesPrimaryKeyColumn
     public function nullsafe(?Examination $examination): ?string
     {
         return $examination?->id;
+    }
+
+    public function nullsafeOnNullableProperty(ExaminationHolder $holder): ?string
+    {
+        return $holder->examination?->id;
     }
 
     public function legacyAccessor(LegacyAccessorExamination $examination): ?string

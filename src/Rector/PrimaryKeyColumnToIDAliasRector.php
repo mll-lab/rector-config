@@ -13,6 +13,7 @@ use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Generic\GenericObjectType;
 use PHPStan\Type\NeverType;
 use PHPStan\Type\Type;
+use PHPStan\Type\TypeCombinator;
 use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
@@ -72,7 +73,7 @@ CODE_SAMPLE,
             return null;
         }
 
-        $classNames = $this->getType($node->var)->getObjectClassNames();
+        $classNames = TypeCombinator::removeNull($this->getType($node->var))->getObjectClassNames();
         if (count($classNames) !== 1) {
             return null;
         }
