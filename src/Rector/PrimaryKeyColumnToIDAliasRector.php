@@ -13,6 +13,7 @@ use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Generic\GenericObjectType;
 use PHPStan\Type\NeverType;
 use PHPStan\Type\Type;
+use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
@@ -57,6 +58,11 @@ CODE_SAMPLE,
     public function refactor(Node $node): ?Node
     {
         if (! $node->name instanceof Identifier) {
+            return null;
+        }
+
+        // unset() removes the raw attribute "id" instead of going through the accessor.
+        if ($node->getAttribute(AttributeKey::IS_UNSET_VAR) === true) {
             return null;
         }
 

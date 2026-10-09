@@ -27,6 +27,11 @@ class SkipsOtherPropertiesAndModels
         return $examination->exam_no;
     }
 
+    public function unsetBypassesTheAccessor(Examination $examination): void
+    {
+        unset($examination->exam_no);
+    }
+
     public function columnStringInQuery(): void
     {
         Examination::query()->where('exam_no', 'E-1');
