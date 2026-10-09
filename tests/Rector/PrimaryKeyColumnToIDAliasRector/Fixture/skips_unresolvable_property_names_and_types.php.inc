@@ -19,6 +19,11 @@ class SkipsUnresolvablePropertyNamesAndTypes
     {
         return $model->exam_no;
     }
+
+    public function undefinedClass(UndefinedClass $model): ?string
+    {
+        return $model->exam_no;
+    }
 }
 
 ?>

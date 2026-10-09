@@ -91,6 +91,10 @@ CODE_SAMPLE,
 
     private function determineIDAliasedPrimaryKey(string $className): ?string
     {
+        if (! $this->reflectionProvider->hasClass($className)) {
+            return null;
+        }
+
         $classReflection = $this->reflectionProvider->getClass($className);
         if (! $classReflection->isSubclassOf(Model::class)) {
             return null;
