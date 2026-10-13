@@ -9,9 +9,15 @@ You can find and compare releases at the [GitHub release page](https://github.co
 
 ## Unreleased
 
+## v3.3.0
+
 ### Added
 
-- Add `PrimaryKeyColumnToIDAliasRector` to access model identity through the `id` alias instead of the primary key column name
+- Add `PrimaryKeyColumnToIDAliasRector` to access model identity through the `id` alias instead of the primary key column name https://github.com/mll-lab/rector-config/pull/7
+
+### Fixed
+
+- Tolerate Rector 2.x releases without `FirstClassCallableRector` https://github.com/mll-lab/rector-config/pull/8
 
 ## v3.2.0
 
