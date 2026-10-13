@@ -28,6 +28,7 @@ function config(RectorConfig $rectorConfig): void
 function laravel(RectorConfig $rectorConfig): void
 {
     config($rectorConfig);
+    $rectorConfig->rule(\MLL\RectorConfig\Rector\PrimaryKeyColumnToIDAliasRector::class);
     $rectorConfig->ruleWithConfiguration(\Rector\Transform\Rector\FuncCall\FuncCallToNewRector::class, [
         'collect' => \Illuminate\Support\Collection::class,
     ]);
