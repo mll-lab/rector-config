@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.4.0](https://github.com/mll-lab/rector-config/compare/v3.3.0...v3.4.0) (2026-11-04)
+
+### Features
+
+* add StringUtilConstantRector ([#10](https://github.com/mll-lab/rector-config/issues/10)) ([a938a7c](https://github.com/mll-lab/rector-config/commit/a938a7ca5bfebbc9951c066e66eeb51fe1d97e57))
+
 ## v3.3.0
 
 ### Added
