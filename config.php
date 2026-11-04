@@ -20,6 +20,7 @@ function config(RectorConfig $rectorConfig): void
 
     $rectorConfig->rule(\MLL\RectorConfig\Rector\ElvisToCoalesceRector::class);
     $rectorConfig->rule(\MLL\RectorConfig\Rector\IfThrowToCoalesceThrowRector::class);
+    $rectorConfig->rule(\MLL\RectorConfig\Rector\StringUtilConstantRector::class);
 }
 
 /**
