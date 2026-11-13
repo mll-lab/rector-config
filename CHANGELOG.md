@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.5.0](https://github.com/mll-lab/rector-config/compare/v3.4.0...v3.5.0) (2026-11-13)
+
+### Features
+
+* add PregMatchTruthyCheckRector ([#11](https://github.com/mll-lab/rector-config/issues/11)) ([33b29d2](https://github.com/mll-lab/rector-config/commit/33b29d2fcbc0fe270a588072092be1917c56a5d6))
+
 ## [3.4.0](https://github.com/mll-lab/rector-config/compare/v3.3.0...v3.4.0) (2026-11-04)
 
 ### Features
